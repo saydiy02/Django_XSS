@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Data</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        a {
+            text-decoration: none;
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #333;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        a:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Your Data</h2>
+        <table>
+            <tr>
+                <th>Goal</th>
+                <th>Attack Type</th>
+                <th>Skill Level</th>
+                <th>Automation</th>
+                <th>Platform</th>
+                <th>Suggestion</th>
+            </tr>
+            {% for entry in data %}
+            <tr>
+                <td>{{ entry.get_goal_display }}</td>
+                <td>{{ entry.get_attackT_display }}</td>
+                <td>{{ entry.get_skill_display }}</td>
+                <td>{{ entry.get_automation_display }}</td>
+                <td>{{ entry.get_platform_display }}</td>
+                <td>
+                    {% if entry.suggest == 0 %}
+                        Nmap & OWASP ZAP
+                    {% elif entry.suggest == 1 %}
+                        Nmap & XSSser
+                    {% else %}
+                        Unknown
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div class="button-container">
+            <a href="{% url 'new_data' %}">Add New Data</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </div>
+</body>
+</html>
