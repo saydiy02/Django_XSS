@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool Results</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #FFF2CC;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 220vh;
+        }
+        .container {
+            background-color: #FFF7E0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 80%;
+            overflow: auto;
+        }
+        h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .result {
+            text-align: left;
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .result pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        a {
+            text-decoration: none;
+            padding: 10px 20px;
+            color: #000;
+            background-color: #ffdb58;
+            border-radius: 4px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        a:hover {
+            background-color: #E1C16E;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Your Tool Results</h2>
+        {% for result in results %}
+        <div class="result">
+            <h3>{{ result.tool_name }} - {{ result.target }}</h3>
+            <pre>{{ result.result|safe }}</pre>
+        </div>
+        {% endfor %}
+        <div class="button-container">
+            <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>
