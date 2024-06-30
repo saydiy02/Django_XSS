@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 class UserData(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -9,6 +10,7 @@ class UserData(models.Model):
     automation = models.IntegerField(choices=[(0, 'No'), (1, 'Yes')])
     platform = models.IntegerField(choices=[(0, 'Windows'), (1, 'Linux'), (2, 'MacOS')])
     suggest = models.IntegerField(choices=[(0, 'Nmap & PwnXSS'), (1, 'Nmap & XSStrike')])
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f'{self.user.username} - {self.goal}'

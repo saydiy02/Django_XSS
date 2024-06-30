@@ -66,16 +66,12 @@ def new_data(request):
             # Simpan data user
             user = request.user
             
-            # Pisahkan ip dan port dari data yang akan diprediksi
             input_data = prepare_input_data(goal, attackT, skill, automation, platform)
             
-            # Load model RandomForestClassifier
-            #svm_model = joblib.load('svmxss.pkl')  # Pastikan nama file model sesuai
             svm_model = load_model()
-            # Lakukan prediksi
+
             prediction = svm_model.predict(input_data)[0]
             
-            # Menyimpan hasil prediksi ke dalam model
             user_data = UserData.objects.create(
                 user=user, 
                 goal=goal, 
@@ -85,7 +81,7 @@ def new_data(request):
                 platform=platform, 
                 suggest=prediction
             )
-            return redirect('success')  # Redirect ke halaman sukses
+            return redirect('success')  
     else:
         form = UserDataForm()
     return render(request, 'suggestxss/new_data.html', {'form': form})
@@ -132,7 +128,7 @@ def user_register(request):
 @login_required
 def view_data(request):
     # Retrieve and display user's data
-    data = UserData.objects.filter(user=request.user)
+    data = UserData.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'suggestxss/view_data.html', {'data': data})
     
 @login_required

@@ -44,6 +44,11 @@
             border-radius: 6px;
             transition: background-color 0.3s, transform 0.3s;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 150px; 
+            height: 50px;
         }
         a:hover {
             background-color: #E1C16E;
@@ -61,6 +66,7 @@
             <a href="{% url 'run_pwnxss' %}">Run PwnXSS</a>
             <a href="{% url 'run_xsstrike' %}">Run Xsstrike</a>
             <a href="{% url 'tool_results' %}">Tools History</a>
+            <a href="{% url 'logout' %}">Logout</a>
         </div>
     </div>
 </body>

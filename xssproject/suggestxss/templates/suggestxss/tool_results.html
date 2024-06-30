@@ -14,7 +14,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 220vh;
+            height: 250vh;
         }
         .container {
             background-color: #FFF7E0;
@@ -41,6 +41,11 @@
             white-space: pre-wrap;
             word-wrap: break-word;
         }
+        .created-at {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
         .button-container {
             margin-top: 20px;
         }
@@ -64,6 +69,7 @@
         <div class="result">
             <h3>{{ result.tool_name }} - {{ result.target }}</h3>
             <pre>{{ result.result|safe }}</pre>
+            <div class="created-at">Created at: {{ result.created_at }}</div>
         </div>
         {% endfor %}
         <div class="button-container">

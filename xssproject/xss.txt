@@ -108,3 +108,5 @@ http://testphp.vulnweb.com/search.php?test=query
 
 http://testphp.vulnweb.com/search.php?test=query
 
+http://testphp.vulnweb.com/search.php?test=query
+

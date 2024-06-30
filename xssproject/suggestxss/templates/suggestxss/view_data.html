@@ -83,6 +83,7 @@
         <h2>Your Data</h2>
         <table>
             <tr>            
+                <th>Created At</th>
                 <th>Goal</th>
                 <th>Attack Type</th>
                 <th>Skill Level</th>
@@ -93,6 +94,7 @@
             </tr>
             {% for entry in data %}
             <tr>
+                <td>{{ entry.created_at }}</td>
                 <td>{{ entry.get_goal_display }}</td>
                 <td>{{ entry.get_attackT_display }}</td>
                 <td>{{ entry.get_skill_display }}</td>
