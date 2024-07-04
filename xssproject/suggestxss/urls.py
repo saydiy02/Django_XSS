@@ -16,5 +16,6 @@ urlpatterns = [
     path('run_pwnxss/', views.run_pwnxss, name='run_pwnxss'),
     path('run_xsstrike/', views.run_xsstrike, name='run_xsstrike'),
     path('tool_results/', views.tool_results, name='tool_results'),
+    path('delete_tool_result/<int:result_id>/', views.delete_tool_result, name='delete_tool_result'),
     path('submit_feedback/', views.submit_feedback, name='submit_feedback'),
 ]

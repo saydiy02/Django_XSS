@@ -8,55 +8,60 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #FFF2CC;
+            background: #FFF2CC;
             color: #444;
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
             background-color: #FFF7E0;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
             text-align: center;
         }
         h2 {
-            font-size: 28px;
+            font-size: 30px;
             color: #333;
             margin-bottom: 20px;
+            border-bottom: 2px solid #FFDB58;
+            padding-bottom: 10px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
         table, th, td {
             border: 1px solid #ddd;
         }
         th, td {
-            padding: 8px;
+            padding: 12px;
             text-align: center;
         }
         th {
             background-color: #FFDB58;
             color: #333;
         }
-
         p {
             font-size: 18px;
             color: #555;
         }
         .button-container {
-            margin-top: 20px;
+            margin-top: 30px;
         }
         a {
             text-decoration: none;
-            padding: 10px 20px;
-            color: #000;
+            padding: 12px 24px;
+            color: #333;
             background-color: #FFDB58;
-            border-radius: 4px;
+            border-radius: 6px;
             transition: background-color 0.3s, transform 0.3s;
+            margin: 5px;
+            display: inline-block;
         }
         a:hover {
             background-color: #E1C16E;
@@ -68,60 +73,74 @@
             margin-top: 20px;
         }
         .feedback-buttons button {
-            padding: 10px 20px;
+            padding: 12px 24px;
             font-size: 16px;
             cursor: pointer;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             transition: background-color 0.3s, transform 0.3s;
+            color: white;
         }
         .feedback-buttons .agree {
             background-color: #4CAF50;
-            color: white;
         }
         .feedback-buttons .agree:hover {
             background-color: #45A049;
         }
         .feedback-buttons .disagree {
             background-color: #F44336;
-            color: white;
         }
         .feedback-buttons .disagree:hover {
             background-color: #E41E1E;
         }
-        .suggestion-link {
-            color: #000;
-            text-decoration: none;
-            cursor: pointer;
-            background-color: transparent;
-        }
-        .suggestion-link:hover {
-            text-decoration: underline;
+        .feedback-message {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #555;
         }
     </style>
     <script>
-        function submitFeedback(agree) {
+        function submitFeedback(agree, preferredSuggestion = null) {
             const user_data_id = "{{ data.id }}";
+            const csrfToken = '{{ csrf_token }}';
+
             fetch("{% url 'submit_feedback' %}", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token }}"
+                    "X-CSRFToken": csrfToken
                 },
-                body: JSON.stringify({
-                    user_data_id: user_data_id,
-                    agree: agree
-                })
+                body: JSON.stringify({ user_data_id: user_data_id, agree: agree, preferred_suggestion: preferredSuggestion })
             })
             .then(response => response.json())
             .then(data => {
+                const feedbackMessage = document.getElementById('feedback-message');
+                const feedbackText = document.getElementById('feedback-text');
                 if (data.status === 'success') {
-                    alert("Feedback submitted successfully.");
+                    feedbackText.innerText = "Feedback submitted successfully!";
                 } else {
-                    alert("Failed to submit feedback.");
+                    feedbackText.innerText = `Error: ${data.message}`;
                 }
+                feedbackMessage.style.display = 'block';
+            })
+            .catch(error => {
+                const feedbackMessage = document.getElementById('feedback-message');
+                const feedbackText = document.getElementById('feedback-text');
+                feedbackText.innerText = `Error: ${error}`;
+                feedbackMessage.style.display = 'block';
             });
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('agree').addEventListener('click', function() {
+                submitFeedback(true);
+            });
+
+            document.getElementById('disagree').addEventListener('click', function() {
+                const preferredSuggestion = prompt("What is your preferred suggestion?");
+                submitFeedback(false, preferredSuggestion);
+            });
+        });
     </script>
 </head>
 <body>
@@ -168,54 +187,15 @@
             <a href="{% url 'logout' %}">Logout</a>
         </div>
         
-    
-    <h2>Feedback</h2>
-    <button id="agree">Agree</button>
-    <button id="disagree">Disagree</button>
+        <h2>Feedback</h2>
+        <div class="feedback-buttons">
+            <button id="agree" class="agree">Agree</button>
+            <button id="disagree" class="disagree">Disagree</button>
+        </div>
 
-    <div id="feedback-message" style="display: none;">
-        <p id="feedback-text"></p>
+        <div id="feedback-message" class="feedback-message" style="display: none;">
+            <p id="feedback-text"></p>
+        </div>
     </div>
-
-    <script>
-        document.getElementById('agree').addEventListener('click', function() {
-            submitFeedback(true);
-        });
-
-        document.getElementById('disagree').addEventListener('click', function() {
-            const preferredSuggestion = prompt("What is your preferred suggestion?");
-            submitFeedback(false, preferredSuggestion);
-        });
-
-        function submitFeedback(agree, preferredSuggestion = null) {
-            const csrfToken = '{{ csrf_token }}';
-
-            fetch("{% url 'submit_feedback' %}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": csrfToken
-                },
-                body: JSON.stringify({ agree: agree, preferred_suggestion: preferredSuggestion })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const feedbackMessage = document.getElementById('feedback-message');
-                const feedbackText = document.getElementById('feedback-text');
-                if (data.status === 'success') {
-                    feedbackText.innerText = "Feedback submitted successfully!";
-                } else {
-                    feedbackText.innerText = `Error: ${data.message}`;
-                }
-                feedbackMessage.style.display = 'block';
-            })
-            .catch(error => {
-                const feedbackMessage = document.getElementById('feedback-message');
-                const feedbackText = document.getElementById('feedback-text');
-                feedbackText.innerText = `Error: ${error}`;
-                feedbackMessage.style.display = 'block';
-            });
-        }
-    </script>
 </body>
 </html>
